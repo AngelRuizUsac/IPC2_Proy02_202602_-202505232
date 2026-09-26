@@ -1,5 +1,0 @@
-@model Libro
-@{ ViewData["Title"] = "Detalle del libro"; }
-<a class="back" asp-action="Index">Volver a la colección</a>
-@if (Model == null) { <section class="mb-4"><h1>No hay un libro para mostrar</h1><p>La colección está vacía o no se encontró ese ISBN.</p><a class="btn btn-primary" asp-action="Index">Explorar colección</a></section> }
-else { <section class="mb-4"><h1>@Model.Titulo</h1><p class="intro">@Model.Autor</p><dl><dt>ISBN</dt><dd>@Model.ISBN</dd><dt>Categoría</dt><dd><a asp-action="LibrosCategoria" asp-route-nombreCategoria="@Model.Categoria.Nombre">@Model.Categoria.Nombre</a></dd></dl><form asp-action="EliminarLibro" method="post"><input type="hidden" name="isbn" value="@Model.ISBN" /><button type="submit" class="btn btn-outline-secondary">Eliminar de la colección</button></form></section> }

@@ -1,4 +1,4 @@
-namespace proyecto2.Models
+﻿namespace proyecto2.Models
 {
     public class NodoLibro
     {
@@ -15,5 +15,9 @@ namespace proyecto2.Models
             Altura = 1;
         }
 
+        public bool EsHoja()
+        {
+            return Izquierdo == null && Derecho == null;
+        }
     }
 }

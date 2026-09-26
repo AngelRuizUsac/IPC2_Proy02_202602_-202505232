@@ -1,9 +1,0 @@
-@model DatosAyuda
-@{ ViewData["Title"] = "Ayuda"; }
-<h1>Ayuda</h1>
-<dl>
-    <dt>Nombre</dt><dd>@Model.Nombre</dd>
-    <dt>Carné</dt><dd>@Model.Carne</dd>
-    <dt>Sección</dt><dd>@Model.Seccion</dd>
-</dl>
-<a href="@Url.Content(Model.EnlaceDocumentacion)" target="_blank" rel="noopener">Documentación del proyecto</a>
