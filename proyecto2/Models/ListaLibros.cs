@@ -1,4 +1,4 @@
-﻿namespace proyecto2.Models
+namespace proyecto2.Models
 {
     public class NodoListaLibro
     {

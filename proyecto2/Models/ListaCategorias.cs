@@ -23,8 +23,14 @@ namespace proyecto2.Models
         public void Agregar(string nombre, string? padre, int nivel)
         {
             NodoListaCategoria nuevo = new NodoListaCategoria(nombre, padre, nivel);
-            if (Primero == null) Primero = nuevo;
-            else ultimo!.Siguiente = nuevo;
+            if (Primero == null)
+            {
+                Primero = nuevo;
+            }
+            else
+            {
+                ultimo!.Siguiente = nuevo;
+            }
             ultimo = nuevo;
         }
     }

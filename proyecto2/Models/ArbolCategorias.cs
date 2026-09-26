@@ -28,11 +28,14 @@ namespace proyecto2.Models
                 }
                 else
                 {
-                    while (actual != null && actual.SiguienteHermano == null){
+                    while (actual != null && actual.SiguienteHermano == null)
+                    {
                         actual = actual.Padre;
                     }
 
-                    if (actual != null){
+                    if (actual != null)
+
+                    {
                         actual = actual.SiguienteHermano;
                     }
                 }
@@ -41,14 +44,13 @@ namespace proyecto2.Models
             return null;
         }
 
-        public Categoria Agregar(string nombre,string? nombrePadre = null)
+        public Categoria Agregar(string nombre, string? nombrePadre = null)
         {
             Categoria nueva = new Categoria(nombre);
 
             if (nombrePadre == null)
             {
-                PrimeraRaiz = InsertarOrdenado(
-                    PrimeraRaiz, nueva);
+                PrimeraRaiz = InsertarOrdenado(PrimeraRaiz, nueva);
             }
             else
             {
@@ -56,8 +58,7 @@ namespace proyecto2.Models
 
                 nueva.Padre = padre;
 
-                padre.PrimerHijo = InsertarOrdenado(
-                    padre.PrimerHijo, nueva);
+                padre.PrimerHijo = InsertarOrdenado(padre.PrimerHijo, nueva);
             }
 
             return nueva;
@@ -83,13 +84,16 @@ namespace proyecto2.Models
                         actual = actual.Padre;
                         nivel--;
                     }
-                    if (actual != null) actual = actual.SiguienteHermano;
+                    if (actual != null)
+                    {
+                        actual = actual.SiguienteHermano;
+                    }
                 }
             }
             return lista;
         }
 
-        private Categoria InsertarOrdenado(Categoria? primero,Categoria nueva)
+        private Categoria InsertarOrdenado(Categoria? primero, Categoria nueva)
         {
             if (primero == null ||
                 string.Compare(nueva.Nombre, primero.Nombre, true) < 0)
@@ -99,10 +103,7 @@ namespace proyecto2.Models
             }
             Categoria actual = primero;
             while (actual.SiguienteHermano != null &&
-                   string.Compare(
-                       actual.SiguienteHermano.Nombre,
-                       nueva.Nombre,
-                       true) < 0)
+                   string.Compare(actual.SiguienteHermano.Nombre, nueva.Nombre, true) < 0)
             {
                 actual = actual.SiguienteHermano;
             }

@@ -9,8 +9,8 @@ namespace proyecto2.Services
         public int Cargar(string contenido, Catalogo catalogo)
         {
             CategoriaPendiente? pendientes = LeerCategorias(contenido);
-            int duplicados = IncorporarCategorias(pendientes, catalogo);
-            return duplicados + LeerLibros(contenido, catalogo);
+            int rechazados = IncorporarCategorias(pendientes, catalogo);
+            return rechazados + LeerLibros(contenido, catalogo);
         }
 
         private CategoriaPendiente? LeerCategorias(string contenido)
@@ -67,18 +67,23 @@ namespace proyecto2.Services
 
         private int IncorporarCategorias(CategoriaPendiente? primero, Catalogo catalogo)
         {
-            int duplicados = 0;
+            int rechazados = 0;
             // Con una jerarquia valida, cada pasada puede incorporar nuevas categorias.
             while (primero != null)
             {
+                bool avanzo = false;
                 CategoriaPendiente? anterior = null;
                 CategoriaPendiente? actual = primero;
 
                 while (actual != null)
                 {
-                    if (catalogo.Categorias.Buscar(actual.Nombre) != null || actual.NombrePadre == null || catalogo.Categorias.Buscar(actual.NombrePadre) != null)
+                    if (string.IsNullOrWhiteSpace(actual.Nombre) || catalogo.Categorias.Buscar(actual.Nombre) != null || actual.NombrePadre == null || catalogo.Categorias.Buscar(actual.NombrePadre) != null)
                     {
-                        if (catalogo.AgregarCategoria(actual.Nombre, actual.NombrePadre) == null) duplicados++;
+                        avanzo = true;
+                        if (catalogo.AgregarCategoria(actual.Nombre, actual.NombrePadre) == null)
+                        {
+                            rechazados++;
+                        }
 
                         if (anterior == null)
                         {
@@ -96,13 +101,22 @@ namespace proyecto2.Services
 
                     actual = actual.Siguiente;
                 }
+                if (!avanzo)
+                {
+                    // Los pendientes restantes tienen padres inexistentes o ciclos.
+                    while (primero != null)
+                    {
+                        rechazados++;
+                        primero = primero.Siguiente;
+                    }
+                }
             }
-            return duplicados;
+            return rechazados;
         }
 
         private int LeerLibros(string contenido, Catalogo catalogo)
         {
-            int duplicados = 0;
+            int rechazados = 0;
             using (StringReader texto = new StringReader(contenido))
             using (XmlReader lector = XmlReader.Create(texto))
             {
@@ -118,7 +132,10 @@ namespace proyecto2.Services
                                 {
                                     using (XmlReader libro = seccion.ReadSubtree())
                                     {
-                                        if (!LeerLibro(libro, catalogo)) duplicados++;
+                                        if (!LeerLibro(libro, catalogo))
+                                        {
+                                            rechazados++;
+                                        }
                                     }
                                 }
                             }
@@ -126,12 +143,13 @@ namespace proyecto2.Services
                     }
                 }
             }
-            return duplicados;
+            return rechazados;
         }
 
         private bool LeerLibro(XmlReader lector, Catalogo catalogo)
         {
             long isbn = 0;
+            bool isbnValido = false;
             string titulo = "";
             string autor = "";
             string categoria = "";
@@ -147,7 +165,7 @@ namespace proyecto2.Services
                     switch (campo)
                     {
                         case "ISBN":
-                            isbn = long.Parse(valor);
+                            isbnValido = long.TryParse(valor, out isbn);
                             break;
                         case "titulo":
                             titulo = valor;
@@ -166,7 +184,7 @@ namespace proyecto2.Services
                 }
             }
 
-            return catalogo.RegistrarLibro(isbn, titulo, autor, categoria) != null;
+            return isbnValido && catalogo.RegistrarLibro(isbn, titulo, autor, categoria) != null;
         }
     }
 }

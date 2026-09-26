@@ -1,13 +1,64 @@
 @model ListaCategorias
-@{ ViewData["Title"] = "Categorías"; }
-<div class="page-heading"><h1>Categorías</h1></div>
-<section class="mb-4"><h2>Agregar categoría</h2><form asp-action="AgregarCategoria" method="post" class="d-grid gap-2 col-md-6"><label for="nombre">Nombre único de la categoría</label><input class="form-control" id="nombre" name="nombre" required /><label for="padre">Ubicación</label><select class="form-select" id="padre" name="nombrePadre"><option value="">Categoría principal (sin padre)</option><partial name="_OpcionesCategorias" model="Model" /></select><button class="btn btn-primary" type="submit">Guardar categoría</button></form></section>
-<section class="mb-4"><div class="section-head"><h2>Organización</h2><a asp-action="ReporteCategorias" target="_blank" rel="noopener">Ver mapa completo</a></div>
-@if (Model.Primero == null) { <div class="empty"><h3>No hay categorías</h3></div> }
-else { <ul class="category-list">
-@{ NodoListaCategoria? actual = Model.Primero; }
-@while (actual != null) {
-<li><div><span class="category-level">Nivel @(actual.Nivel + 1)</span><h3>@actual.Nombre</h3><p>@(actual.Padre == null ? "Categoría principal" : "Dentro de " + actual.Padre)</p></div><div class="d-flex gap-3 mb-3"><a asp-action="LibrosCategoria" asp-route-nombreCategoria="@actual.Nombre">Libros</a><a asp-action="ReporteCategorias" asp-route-nombreCategoria="@actual.Nombre" target="_blank" rel="noopener">Ver rama</a></div></li>
-actual = actual.Siguiente;
+@{
+    ViewData["Title"] = "Categorías";
 }
-</ul> }</section>
+<div class="page-heading">
+    <h1>Categorías</h1>
+</div>
+<section class="mb-4">
+    <h2>Agregar categoría</h2>
+    <form asp-action="AgregarCategoria" method="post" class="d-grid gap-2 col-md-6">
+        <label for="nombre">Nombre único de la categoría</label>
+        <input class="form-control" id="nombre" name="nombre" required />
+        <label for="padre">Ubicación</label>
+        <select class="form-select" id="padre" name="nombrePadre">
+            <option value="">Categoría principal (sin padre)</option>
+            <partial name="_OpcionesCategorias" model="Model" />
+        </select>
+        <button class="btn btn-primary" type="submit">Guardar categoría</button>
+    </form>
+</section>
+<section class="mb-4">
+    <div class="section-head">
+        <h2>Organización</h2>
+        <a asp-action="ReporteCategorias" target="_blank" rel="noopener">Ver mapa completo</a>
+    </div>
+    @if (Model.Primero == null)
+    {
+        <div class="empty">
+            <h3>No hay categorías</h3>
+        </div>
+    }
+    else
+    {
+        <ul class="category-list">
+            @{
+                NodoListaCategoria? actual = Model.Primero;
+            }
+            @while (actual != null)
+            {
+                <li>
+                    <div>
+                        <span class="category-level">Nivel @(actual.Nivel + 1)</span>
+                        <h3>@actual.Nombre</h3>
+                        <p>
+                            @if (actual.Padre == null)
+                            {
+                                <span>Categoría principal</span>
+                            }
+                            else
+                            {
+                                <span>Dentro de @actual.Padre</span>
+                            }
+                        </p>
+                    </div>
+                    <div class="d-flex gap-3 mb-3">
+                        <a asp-action="LibrosCategoria" asp-route-nombreCategoria="@actual.Nombre">Libros</a>
+                        <a asp-action="ReporteCategorias" asp-route-nombreCategoria="@actual.Nombre" target="_blank" rel="noopener">Ver rama</a>
+                    </div>
+                </li>
+                actual = actual.Siguiente;
+            }
+        </ul>
+    }
+</section>

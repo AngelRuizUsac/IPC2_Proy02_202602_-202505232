@@ -1,16 +1,49 @@
 @model ListaLibros
 @if (Model.Primero == null)
 {
-    <div class="empty"><h3>Aún no hay libros aquí</h3></div>
+    <div class="empty">
+        <h3>Aún no hay libros aquí</h3>
+    </div>
 }
 else
 {
-    <div class="table-responsive"><table class="table table-bordered"><caption class="visually-hidden">Libros ordenados por ISBN</caption><thead><tr><th>ISBN</th><th>Título</th><th>Autor</th><th>Categoría</th><th>Acciones</th></tr></thead><tbody>
-    @{ NodoListaLibro? actual = Model.Primero; }
-    @while (actual != null)
-    {
-        <tr><td class="isbn">@actual.Libro.ISBN</td><td><a asp-action="BuscarLibro" asp-route-isbn="@actual.Libro.ISBN">@actual.Libro.Titulo</a></td><td>@actual.Libro.Autor</td><td><a class="tag" asp-action="LibrosCategoria" asp-route-nombreCategoria="@actual.Libro.Categoria.Nombre">@actual.Libro.Categoria.Nombre</a></td><td><form asp-action="EliminarLibro" method="post"><input type="hidden" name="isbn" value="@actual.Libro.ISBN" /><button class="btn btn-outline-secondary" type="submit" aria-label="Eliminar @actual.Libro.Titulo">Eliminar</button></form></td></tr>
-        actual = actual.Siguiente;
-    }
-    </tbody></table></div>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <caption class="visually-hidden">Libros ordenados por ISBN</caption>
+            <thead>
+                <tr>
+                    <th>ISBN</th>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Categoría</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    NodoListaLibro? actual = Model.Primero;
+                }
+                @while (actual != null)
+                {
+                    <tr>
+                        <td class="isbn">@actual.Libro.ISBN</td>
+                        <td>
+                            <a asp-action="BuscarLibro" asp-route-isbn="@actual.Libro.ISBN">@actual.Libro.Titulo</a>
+                        </td>
+                        <td>@actual.Libro.Autor</td>
+                        <td>
+                            <a class="tag" asp-action="LibrosCategoria" asp-route-nombreCategoria="@actual.Libro.Categoria.Nombre">@actual.Libro.Categoria.Nombre</a>
+                        </td>
+                        <td>
+                            <form asp-action="EliminarLibro" method="post">
+                                <input type="hidden" name="isbn" value="@actual.Libro.ISBN" />
+                                <button class="btn btn-outline-secondary" type="submit" aria-label="Eliminar @actual.Libro.Titulo">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    actual = actual.Siguiente;
+                }
+            </tbody>
+        </table>
+    </div>
 }

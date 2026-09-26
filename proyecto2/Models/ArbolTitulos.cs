@@ -108,7 +108,14 @@ namespace proyecto2.Models
         private int Comparar(Libro primero, Libro segundo)
         {
             int orden = string.Compare(primero.Titulo, segundo.Titulo, true);
-            return orden == 0 ? primero.ISBN.CompareTo(segundo.ISBN) : orden;
+            if (orden == 0)
+            {
+                return primero.ISBN.CompareTo(segundo.ISBN);
+            }
+            else
+            {
+                return orden;
+            }
         }
 
         public ListaLibros Buscar(string titulo)
@@ -120,11 +127,23 @@ namespace proyecto2.Models
 
         private void BuscarCoincidencias(NodoLibro? nodo, string titulo, ListaLibros resultado)
         {
-            if (nodo == null) return;
+            if (nodo == null)
+            {
+                return;
+            }
             int orden = string.Compare(titulo, nodo.Libro.Titulo, true);
-            if (orden <= 0) BuscarCoincidencias(nodo.Izquierdo, titulo, resultado);
-            if (orden == 0) resultado.Agregar(nodo.Libro);
-            if (orden >= 0) BuscarCoincidencias(nodo.Derecho, titulo, resultado);
+            if (orden <= 0)
+            {
+                BuscarCoincidencias(nodo.Izquierdo, titulo, resultado);
+            }
+            if (orden == 0)
+            {
+                resultado.Agregar(nodo.Libro);
+            }
+            if (orden >= 0)
+            {
+                BuscarCoincidencias(nodo.Derecho, titulo, resultado);
+            }
         }
 
         public void Eliminar(Libro libro)

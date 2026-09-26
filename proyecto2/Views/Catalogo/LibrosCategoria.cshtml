@@ -1,3 +1,12 @@
 @model LibrosDeCategoria
-@{ ViewData["Title"] = Model.NombreCategoria; }
-<a class="back" asp-action="Categorias">Todas las categorías</a><div class="page-heading"><h1>@Model.NombreCategoria</h1><a class="btn btn-outline-secondary" asp-action="ReporteLibros" asp-route-nombreCategoria="@Model.NombreCategoria" target="_blank" rel="noopener">Ver libros con Graphviz</a></div><section class="mb-4"><partial name="_Libros" model="Model.Libros" /></section>
+@{
+    ViewData["Title"] = Model.NombreCategoria;
+}
+<a class="back" asp-action="Categorias">Todas las categorías</a>
+<div class="page-heading">
+    <h1>@Model.NombreCategoria</h1>
+    <a class="btn btn-outline-secondary" asp-action="ReporteLibros" asp-route-nombreCategoria="@Model.NombreCategoria" target="_blank" rel="noopener">Ver libros con Graphviz</a>
+</div>
+<section class="mb-4">
+    <partial name="_Libros" model="Model.Libros" />
+</section>

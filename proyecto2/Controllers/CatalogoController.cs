@@ -1,4 +1,5 @@
 using System.IO;
+using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using proyecto2.Models;
@@ -41,8 +42,13 @@ namespace proyecto2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CargarXml(IFormFile archivo)
+        public IActionResult CargarXml(IFormFile? archivo)
         {
+            if (archivo == null || archivo.Length == 0)
+            {
+                ViewData["Alerta"] = "Selecciona un archivo XML con contenido.";
+                return Carga();
+            }
             string contenido;
 
             using (StreamReader lector = new StreamReader(archivo.OpenReadStream()))
@@ -52,10 +58,19 @@ namespace proyecto2.Controllers
 
             lock (estado.Sincronizacion)
             {
-                int duplicados = cargador.Cargar(contenido, estado.Catalogo);
+                int duplicados;
+                try
+                {
+                    duplicados = cargador.Cargar(contenido, estado.Catalogo);
+                }
+                catch (XmlException)
+                {
+                    ViewData["Alerta"] = "El archivo no es un XML válido. Revisa su estructura.";
+                    return Carga();
+                }
                 if (duplicados > 0)
                 {
-                    ViewData["Alerta"] = "Carga completada: se impidió registrar " + duplicados + " registro(s) duplicado(s). Los registros nuevos se incorporaron y los existentes se conservaron.";
+                    ViewData["Alerta"] = "Carga completada: se impidió registrar " + duplicados + " registro(s) duplicado(s) o inválido(s). Revisa nombres, ISBN y categorías. Los registros válidos se incorporaron y los existentes se conservaron.";
                     return Index();
                 }
             }
@@ -75,6 +90,11 @@ namespace proyecto2.Controllers
 
             lock (estado.Sincronizacion)
             {
+                if (nombrePadre != null && estado.Catalogo.Categorias.Buscar(nombrePadre) == null)
+                {
+                    ViewData["Alerta"] = "La categoría padre ya no existe. Selecciona otra.";
+                    return Categorias();
+                }
                 if (estado.Catalogo.AgregarCategoria(nombre, nombrePadre) == null)
                 {
                     ViewData["Alerta"] = "No se registró la categoría: ya existe una categoría con el nombre «" + nombre + "». Usa un nombre diferente.";
@@ -87,11 +107,21 @@ namespace proyecto2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult RegistrarLibro(long isbn, string titulo, string autor, string nombreCategoria)
+        public IActionResult RegistrarLibro(long? isbn, string titulo, string autor, string nombreCategoria)
         {
+            if (!ModelState.IsValid || isbn == null || string.IsNullOrWhiteSpace(titulo) || string.IsNullOrWhiteSpace(autor) || string.IsNullOrWhiteSpace(nombreCategoria))
+            {
+                ViewData["Alerta"] = "Completa los campos y escribe un ISBN entero válido.";
+                return Index();
+            }
             lock (estado.Sincronizacion)
             {
-                if (estado.Catalogo.RegistrarLibro(isbn, titulo, autor, nombreCategoria) == null)
+                if (estado.Catalogo.Categorias.Buscar(nombreCategoria) == null)
+                {
+                    ViewData["Alerta"] = "La categoría ya no existe. Selecciona otra.";
+                    return Index();
+                }
+                if (estado.Catalogo.RegistrarLibro(isbn.Value, titulo, autor, nombreCategoria) == null)
                 {
                     ViewData["Alerta"] = "No se registró el libro: el ISBN " + isbn + " ya existe. Usa un ISBN diferente.";
                     return Index();
@@ -103,22 +133,31 @@ namespace proyecto2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EliminarLibro(long isbn)
+        public IActionResult EliminarLibro(long? isbn)
         {
             lock (estado.Sincronizacion)
             {
-                estado.Catalogo.EliminarLibro(isbn);
+                if (!ModelState.IsValid || isbn == null || !estado.Catalogo.EliminarLibro(isbn.Value))
+                {
+                    ViewData["Alerta"] = "No se eliminó el libro: el ISBN es inválido o el libro ya no existe.";
+                    return Index();
+                }
             }
 
             return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
-        public IActionResult BuscarLibro(long isbn)
+        public IActionResult BuscarLibro(long? isbn)
         {
             lock (estado.Sincronizacion)
             {
-                return View("Libro", estado.Catalogo.BuscarLibro(isbn));
+                Libro? libro = null;
+                if (ModelState.IsValid && isbn != null)
+                {
+                    libro = estado.Catalogo.BuscarLibro(isbn.Value);
+                }
+                return View("Libro", libro);
             }
         }
 
@@ -145,7 +184,13 @@ namespace proyecto2.Controllers
         {
             lock (estado.Sincronizacion)
             {
-                ListaLibros libros = estado.Catalogo.ObtenerLibrosCategoria(nombreCategoria).ListarPorISBN();
+                ArbolLibros? arbol = estado.Catalogo.ObtenerLibrosCategoria(nombreCategoria);
+                if (arbol == null)
+                {
+                    ViewData["Alerta"] = "La categoría no existe.";
+                    return Categorias();
+                }
+                ListaLibros libros = arbol.ListarPorISBN();
                 return View("LibrosCategoria", new LibrosDeCategoria(nombreCategoria, libros));
             }
         }
@@ -163,7 +208,13 @@ namespace proyecto2.Controllers
                 }
                 else
                 {
-                    dot = reportes.GenerarSubcategorias(estado.Catalogo.Categorias.Buscar(nombreCategoria)!);
+                    Categoria? categoria = estado.Catalogo.Categorias.Buscar(nombreCategoria);
+                    if (categoria == null)
+                    {
+                        ViewData["Alerta"] = "La categoría no existe.";
+                        return Categorias();
+                    }
+                    dot = reportes.GenerarSubcategorias(categoria);
                 }
             }
 
@@ -177,7 +228,20 @@ namespace proyecto2.Controllers
 
             lock (estado.Sincronizacion)
             {
-                ArbolLibros libros = nombreCategoria == null ? estado.Catalogo.Libros : estado.Catalogo.ObtenerLibrosCategoria(nombreCategoria);
+                ArbolLibros? libros;
+                if (nombreCategoria == null)
+                {
+                    libros = estado.Catalogo.Libros;
+                }
+                else
+                {
+                    libros = estado.Catalogo.ObtenerLibrosCategoria(nombreCategoria);
+                }
+                if (libros == null)
+                {
+                    ViewData["Alerta"] = "La categoría no existe.";
+                    return Categorias();
+                }
                 dot = reportes.GenerarLibros(libros);
             }
 

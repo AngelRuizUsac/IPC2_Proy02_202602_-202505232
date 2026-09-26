@@ -15,14 +15,28 @@ namespace proyecto2.Models
 
         public Categoria? AgregarCategoria(string nombre, string? nombrePadre = null)
         {
-            if (Categorias.Buscar(nombre) != null) return null;
+            if (string.IsNullOrWhiteSpace(nombre) || Categorias.Buscar(nombre) != null)
+            {
+                return null;
+            }
+            if (nombrePadre != null && Categorias.Buscar(nombrePadre) == null)
+            {
+                return null;
+            }
             return Categorias.Agregar(nombre, nombrePadre);
         }
 
         public Libro? RegistrarLibro(long isbn, string titulo, string autor, string nombreCategoria)
         {
-            if (Libros.Buscar(isbn) != null) return null;
-            Categoria categoria = Categorias.Buscar(nombreCategoria)!;
+            if (Libros.Buscar(isbn) != null)
+            {
+                return null;
+            }
+            Categoria? categoria = Categorias.Buscar(nombreCategoria);
+            if (categoria == null || string.IsNullOrWhiteSpace(titulo) || string.IsNullOrWhiteSpace(autor))
+            {
+                return null;
+            }
             Libro libro = new Libro(isbn, titulo, autor, categoria);
             Libros.Insertar(libro);
             categoria.Libros.Insertar(libro);
@@ -35,12 +49,17 @@ namespace proyecto2.Models
             return Libros.Buscar(isbn);
         }
 
-        public void EliminarLibro(long isbn)
+        public bool EliminarLibro(long isbn)
         {
-            Libro libro = Libros.Buscar(isbn)!;
+            Libro? libro = Libros.Buscar(isbn);
+            if (libro == null)
+            {
+                return false;
+            }
             titulos.Eliminar(libro);
             libro.Categoria.Libros.Eliminar(isbn);
             Libros.Eliminar(isbn);
+            return true;
         }
 
         public ListaLibros BuscarTitulo(string titulo)
@@ -58,10 +77,9 @@ namespace proyecto2.Models
             return Libros.ObtenerMayor();
         }
 
-        public ArbolLibros ObtenerLibrosCategoria(string nombreCategoria)
+        public ArbolLibros? ObtenerLibrosCategoria(string nombreCategoria)
         {
-            Categoria categoria = Categorias.Buscar(nombreCategoria)!;
-            return categoria.Libros;
+            return Categorias.Buscar(nombreCategoria)?.Libros;
         }
     }
 }

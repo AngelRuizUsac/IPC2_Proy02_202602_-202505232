@@ -1,5 +1,7 @@
 @model ListaCategorias
-@{ NodoListaCategoria? actual = Model.Primero; }
+@{
+    NodoListaCategoria? actual = Model.Primero;
+}
 @while (actual != null)
 {
     <option value="@actual.Nombre">@(new string('·', actual.Nivel)) @actual.Nombre</option>
