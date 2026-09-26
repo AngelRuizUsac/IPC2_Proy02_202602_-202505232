@@ -1,0 +1,8 @@
+@model proyecto2.Models.ErrorViewModel
+@{
+    Layout = "_CatalogoLayout";
+    ViewData["Title"] = "Error";
+}
+<h1>No se pudo completar la operación</h1>
+<p>Regresa al catálogo e inténtalo de nuevo.</p>
+<a asp-controller="Catalogo" asp-action="Index">Volver al catálogo</a>

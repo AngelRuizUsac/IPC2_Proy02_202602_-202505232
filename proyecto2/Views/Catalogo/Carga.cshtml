@@ -1,0 +1,7 @@
+@{ ViewData["Title"] = "Carga"; }
+<h1>Carga XML</h1>
+<form asp-action="CargarXml" method="post" enctype="multipart/form-data" class="col-md-6">
+    <label for="archivo" class="form-label">Archivo XML</label>
+    <input id="archivo" name="archivo" type="file" required accept=".xml,application/xml,text/xml" class="form-control mb-3" />
+    <button type="submit" class="btn btn-primary">Cargar archivo</button>
+</form>

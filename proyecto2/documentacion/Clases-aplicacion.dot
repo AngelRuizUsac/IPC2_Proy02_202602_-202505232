@@ -1,0 +1,34 @@
+digraph Aplicacion {
+  graph [rankdir=TB, bgcolor="white", pad="0.25", nodesep="0.3", ranksep="0.6", fontname="Arial"];
+  node [shape=record, fontname="Arial", fontsize=11, style=filled, fillcolor="#f1f4eb", color="#53634c", margin="0.12"];
+  edge [fontname="Arial", fontsize=9, color="#596953"];
+  { rank=same; CargadorXml; GeneradorReportes; RenderizadorGraphviz; }
+  { rank=same; DatosAyuda; LibrosDeCategoria; EstadoCatalogo; }
+  { rank=same; CategoriaPendiente; ListaCategorias; }
+  CargadorXml -> DatosAyuda [style=invis];
+  GeneradorReportes -> LibrosDeCategoria [style=invis];
+  RenderizadorGraphviz -> EstadoCatalogo [style=invis];
+  LibrosDeCategoria -> ListaCategorias [style=invis];
+  CatalogoController [label="{CatalogoController|estado / cargador / reportes\lgraphviz / ayuda\l|Index / Categorias / Ayuda\lCargarXml / AgregarCategoria\lRegistrarLibro / EliminarLibro\lBuscarLibro / BuscarTitulo\lMenor / Mayor / LibrosCategoria\lReporteCategorias / ReporteLibros\lDocumentacion\l}"];
+  RegistroCatalogo [label="{RegistroCatalogo|+ Registrar(servicios, ruta, nombre, seccion, enlace)\l}"];
+  EstadoCatalogo [label="{EstadoCatalogo|Catalogo: Catalogo\lSincronizacion: object\l}"];
+  CargadorXml [label="{CargadorXml|+ Cargar(contenido, catalogo)\l}"];
+  CategoriaPendiente [label="{CategoriaPendiente|Nombre: string\lNombrePadre: string?\lSiguiente: CategoriaPendiente?\l}"];
+  GeneradorReportes [label="{GeneradorReportes|+ GenerarCategorias(arbol)\l+ GenerarSubcategorias(categoria)\l+ GenerarLibros(arbol)\l}"];
+  RenderizadorGraphviz [label="{RenderizadorGraphviz|- rutaEjecutable: string\l|+ RenderizarSvg(dot)\l}"];
+  DatosAyuda [label="{DatosAyuda|Nombre: string\lCarne: string\lSeccion: string\lEnlaceDocumentacion: string\l}"];
+  LibrosDeCategoria [label="{LibrosDeCategoria|NombreCategoria: string\lLibros: ListaLibros\l}"];
+  ListaCategorias [label="{ListaCategorias|Primero: NodoListaCategoria?\lultimo: NodoListaCategoria?\l|Agregar(nombre, padre, nivel)\l}"];
+  NodoListaCategoria [label="{NodoListaCategoria|Nombre: string\lPadre: string?\lNivel: int\lSiguiente: NodoListaCategoria?\l}"];
+  RegistroCatalogo -> CatalogoController [style=invis];
+  RegistroCatalogo -> EstadoCatalogo [style=dashed,label="registra singleton"];
+  CatalogoController -> EstadoCatalogo;
+  CatalogoController -> CargadorXml;
+  CatalogoController -> GeneradorReportes;
+  CatalogoController -> RenderizadorGraphviz;
+  CatalogoController -> DatosAyuda;
+  CatalogoController -> LibrosDeCategoria [style=dashed,label="crea"];
+  CatalogoController -> ListaCategorias [style=dashed,label="presenta"];
+  CargadorXml -> CategoriaPendiente [style=dashed,label="crea pendientes"];
+  ListaCategorias -> NodoListaCategoria [label="0..*",arrowtail=diamond,dir=both];
+}
