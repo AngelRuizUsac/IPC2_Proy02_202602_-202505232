@@ -1,0 +1,6 @@
+@model ListaLibros
+@{ ViewData["Title"] = "Búsqueda por título"; }
+<a class="back" asp-action="Index">Volver a la colección</a><div class="page-heading"><h1>@ViewData["TituloBuscado"]</h1></div><section class="mb-4">
+@if (Model.Primero == null) { <div class="empty"><h2>No encontramos ese título</h2></div> }
+else { <partial name="_Libros" model="Model" /> }
+</section>
