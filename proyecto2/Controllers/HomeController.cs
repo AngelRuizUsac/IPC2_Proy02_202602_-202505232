@@ -19,7 +19,15 @@ namespace proyecto2.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            string identificador = HttpContext.TraceIdentifier;
+            Activity? actividad = Activity.Current;
+            if (actividad != null && actividad.Id != null)
+            {
+                identificador = actividad.Id;
+            }
+            ErrorViewModel error = new ErrorViewModel();
+            error.RequestId = identificador;
+            return View(error);
         }
     }
 }

@@ -113,3 +113,13 @@ C:\Users\Usuario\.codex\.chatgpt-projects\g-p-6ab086e6809c8191bd2d5f364779ae1c\p
 C:\Users\Usuario\.codex\.chatgpt-projects\g-p-6ab086e6809c8191bd2d5f364779ae1c\proyecto2-paso-a-paso\tmp\compilacion-formato\proyecto2.runtimeconfig.json
 C:\Users\Usuario\.codex\.chatgpt-projects\g-p-6ab086e6809c8191bd2d5f364779ae1c\proyecto2-paso-a-paso\tmp\compilacion-formato\proyecto2.dll
 C:\Users\Usuario\.codex\.chatgpt-projects\g-p-6ab086e6809c8191bd2d5f364779ae1c\proyecto2-paso-a-paso\tmp\compilacion-formato\proyecto2.pdb
+C:\Users\Usuario\.codex\.chatgpt-projects\g-p-6ab086e6809c8191bd2d5f364779ae1c\proyecto2-paso-a-paso\tmp\compilacion-if-null\appsettings.Development.json
+C:\Users\Usuario\.codex\.chatgpt-projects\g-p-6ab086e6809c8191bd2d5f364779ae1c\proyecto2-paso-a-paso\tmp\compilacion-if-null\appsettings.json
+C:\Users\Usuario\.codex\.chatgpt-projects\g-p-6ab086e6809c8191bd2d5f364779ae1c\proyecto2-paso-a-paso\tmp\compilacion-if-null\documentacion\Ensayo.pdf
+C:\Users\Usuario\.codex\.chatgpt-projects\g-p-6ab086e6809c8191bd2d5f364779ae1c\proyecto2-paso-a-paso\tmp\compilacion-if-null\proyecto2.staticwebassets.runtime.json
+C:\Users\Usuario\.codex\.chatgpt-projects\g-p-6ab086e6809c8191bd2d5f364779ae1c\proyecto2-paso-a-paso\tmp\compilacion-if-null\proyecto2.staticwebassets.endpoints.json
+C:\Users\Usuario\.codex\.chatgpt-projects\g-p-6ab086e6809c8191bd2d5f364779ae1c\proyecto2-paso-a-paso\tmp\compilacion-if-null\proyecto2.exe
+C:\Users\Usuario\.codex\.chatgpt-projects\g-p-6ab086e6809c8191bd2d5f364779ae1c\proyecto2-paso-a-paso\tmp\compilacion-if-null\proyecto2.deps.json
+C:\Users\Usuario\.codex\.chatgpt-projects\g-p-6ab086e6809c8191bd2d5f364779ae1c\proyecto2-paso-a-paso\tmp\compilacion-if-null\proyecto2.runtimeconfig.json
+C:\Users\Usuario\.codex\.chatgpt-projects\g-p-6ab086e6809c8191bd2d5f364779ae1c\proyecto2-paso-a-paso\tmp\compilacion-if-null\proyecto2.dll
+C:\Users\Usuario\.codex\.chatgpt-projects\g-p-6ab086e6809c8191bd2d5f364779ae1c\proyecto2-paso-a-paso\tmp\compilacion-if-null\proyecto2.pdb

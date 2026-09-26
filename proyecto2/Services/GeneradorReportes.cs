@@ -82,7 +82,11 @@ namespace proyecto2.Services
 
         private string Escapar(string? texto)
         {
-            return (texto ?? "").Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\r\n", "\\n").Replace("\r", "\\n").Replace("\n", "\\n");
+            if (texto == null)
+            {
+                texto = "";
+            }
+            return texto.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\r\n", "\\n").Replace("\r", "\\n").Replace("\n", "\\n");
         }
     }
 }

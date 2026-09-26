@@ -71,7 +71,12 @@ namespace proyecto2.Models
             int nivel = 0;
             while (actual != null)
             {
-                lista.Agregar(actual.Nombre, actual.Padre?.Nombre, nivel);
+                string? nombrePadre = null;
+                if (actual.Padre != null)
+                {
+                    nombrePadre = actual.Padre.Nombre;
+                }
+                lista.Agregar(actual.Nombre, nombrePadre, nivel);
                 if (actual.PrimerHijo != null)
                 {
                     actual = actual.PrimerHijo;

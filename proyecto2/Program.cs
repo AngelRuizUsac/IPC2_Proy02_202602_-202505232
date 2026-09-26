@@ -8,7 +8,12 @@ builder.Services.AddControllersWithViews();
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Services.AddDataProtection().UseEphemeralDataProtectionProvider();
-RegistroCatalogo.Registrar(builder.Services, builder.Configuration["Graphviz:Ruta"] ?? "dot", "Angel Daniel Ruiz Ramos", "C", "/Catalogo/Documentacion");
+string? rutaGraphviz = builder.Configuration["Graphviz:Ruta"];
+if (rutaGraphviz == null)
+{
+    rutaGraphviz = "dot";
+}
+RegistroCatalogo.Registrar(builder.Services, rutaGraphviz, "Angel Daniel Ruiz Ramos", "C", "/Catalogo/Documentacion");
 
 var app = builder.Build();
 

@@ -79,7 +79,12 @@ namespace proyecto2.Models
 
         public ArbolLibros? ObtenerLibrosCategoria(string nombreCategoria)
         {
-            return Categorias.Buscar(nombreCategoria)?.Libros;
+            Categoria? categoria = Categorias.Buscar(nombreCategoria);
+            if (categoria == null)
+            {
+                return null;
+            }
+            return categoria.Libros;
         }
     }
 }
